@@ -1,6 +1,5 @@
 version: 2
 updates:
-  # Flutter/Dart pub dependencies
   - package-ecosystem: pub
     directory: /reme
     schedule:
@@ -9,8 +8,10 @@ updates:
     open-pull-requests-limit: 5
     labels:
       - dependencies
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
 
-  # GitHub Actions
   - package-ecosystem: github-actions
     directory: /
     schedule:
@@ -18,3 +19,6 @@ updates:
       day: monday
     labels:
       - dependencies
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
