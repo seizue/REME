@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    name: Build & Analyze
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.x'
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+        working-directory: reme
+
+      - name: Analyze
+        run: flutter analyze
+        working-directory: reme
+
+      - name: Run tests
+        run: flutter test
+        working-directory: reme
+
+      - name: Build APK (debug)
+        run: flutter build apk --debug
+        working-directory: reme

@@ -1,0 +1,52 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'   # triggers on tags like v1.0.0, v1.2.3
+
+jobs:
+  release:
+    name: Build & Release APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.x'
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+        working-directory: reme
+
+      - name: Build release APK
+        run: flutter build apk --release
+        working-directory: reme
+
+      - name: Rename APK
+        run: |
+          mv reme/build/app/outputs/flutter-apk/app-release.apk \
+             reme/build/app/outputs/flutter-apk/REME-${{ github.ref_name }}.apk
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: REME ${{ github.ref_name }}
+          body: |
+            ## REME ${{ github.ref_name }}
+
+            ### What's new
+            _Add release notes here or use a CHANGELOG.md_
+
+            ### Download
+            Install the APK on your Android device.
+          files: reme/build/app/outputs/flutter-apk/REME-${{ github.ref_name }}.apk
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
