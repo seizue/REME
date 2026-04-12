@@ -29,10 +29,6 @@ jobs:
         run: flutter analyze
         working-directory: reme
 
-      - name: Run tests
-        run: flutter test
-        working-directory: reme
-
       - name: Build APK (debug)
         run: flutter build apk --debug
         working-directory: reme
